@@ -18,6 +18,67 @@ export const PRICING = {
   },
 } as const;
 
+/** 典型 Parse 用量：按「单次 Parse 调用」里塞进多少视觉信息估算；请到 Anthropic 用量导出里校准。 */
+export const PARSE_USAGE_PRESETS = [
+  {
+    id: "single",
+    label: "单张截图",
+    blurb: "1 张牌桌/界面图，结构化成 JSON",
+    parseIn: 420,
+    parseOut: 360,
+  },
+  {
+    id: "multi_3",
+    label: "多图 ≈3 张",
+    blurb: "同一手牌多角度或少张关键帧",
+    parseIn: 1900,
+    parseOut: 420,
+  },
+  {
+    id: "multi_6",
+    label: "多图 ≈6 张",
+    blurb: "多照片拼接判定前读图",
+    parseIn: 3800,
+    parseOut: 480,
+  },
+  {
+    id: "video_heavy",
+    label: "视频 / 大量关键帧",
+    blurb: "多帧或长上下文读图，input 会显著变大",
+    parseIn: 9500,
+    parseOut: 550,
+  },
+] as const;
+
+export type ParseUsagePresetId = (typeof PARSE_USAGE_PRESETS)[number]["id"];
+
+/** 典型 Judge 用量：裁决提示里含多少历史与视觉上下文；重度对应多图/视频说明。 */
+export const JUDGE_USAGE_PRESETS = [
+  {
+    id: "light",
+    label: "轻量裁决",
+    blurb: "短规则、少上下文",
+    judgeIn: 950,
+    judgeOut: 420,
+  },
+  {
+    id: "standard",
+    label: "标准裁决",
+    blurb: "与当前主站默认接近",
+    judgeIn: 1800,
+    judgeOut: 800,
+  },
+  {
+    id: "heavy",
+    label: "重度（多图/视频）",
+    blurb: "长牌谱、多图摘要或视频文字描述一起判",
+    judgeIn: 4800,
+    judgeOut: 1400,
+  },
+] as const;
+
+export type JudgeUsagePresetId = (typeof JUDGE_USAGE_PRESETS)[number]["id"];
+
 export type ModelPriceTier = keyof typeof PRICING.anthropicUsdPerMillion;
 
 export function apiCostUsd(
@@ -109,10 +170,10 @@ export function defaultPricingInputs(): PricingInputs {
     tier2Credits: PRICING.tierCredits[2],
     tier3Credits: PRICING.tierCredits[3],
     signupBonusCredits: PRICING.signupBonusCredits,
-    parseIn: PRICING.tokens.parse.input,
-    parseOut: PRICING.tokens.parse.output,
-    judgeIn: PRICING.tokens.judge.input,
-    judgeOut: PRICING.tokens.judge.output,
+    parseIn: PARSE_USAGE_PRESETS[0].parseIn,
+    parseOut: PARSE_USAGE_PRESETS[0].parseOut,
+    judgeIn: JUDGE_USAGE_PRESETS[1].judgeIn,
+    judgeOut: JUDGE_USAGE_PRESETS[1].judgeOut,
     haikuInPerM: PRICING.anthropicUsdPerMillion.haiku.input,
     haikuOutPerM: PRICING.anthropicUsdPerMillion.haiku.output,
     sonnetInPerM: PRICING.anthropicUsdPerMillion.sonnet.input,
