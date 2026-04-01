@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #05060a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #e8e8f0;
+  --muted: #9aa0b4;
+  --accent: #7c5cff;
+  --good: #34d399;
+  --warn: #fbbf24;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(1200px 800px at 20% 0%, rgba(124, 92, 255, 0.12), transparent),
+    radial-gradient(900px 600px at 90% 20%, rgba(56, 189, 248, 0.08), transparent), var(--bg);
+  color: var(--text);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
